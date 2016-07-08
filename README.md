@@ -28,7 +28,7 @@ SparkFun also [propose a solution to allowing serial debugging][Serial Debugging
 
 Rather than cutting traces, I took the approach of desoldering the DTR pin from the SMD 6-pin header at the bottom of the [FTDI Basic 3.3vdc][SparkFun FTDI 3.3V] board.
 
-<img src="https://cdn.sparkfun.com//assets/parts/3/9/5/8/09873-03a.jpg"/>
+![FTDI Basic 3.3V - bottom](images/ftdi_basic_bottom.jpg)
 
 Having done so, I am able to tie GPIO0 to ground and cycle power &mdash; whenever I need to upload a new sketch to the ESP8266.
 
