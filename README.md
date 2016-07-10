@@ -32,6 +32,47 @@ Rather than cutting traces, I took the approach of desoldering the DTR pin from 
 
 Having done so, I am able to tie GPIO0 to ground and cycle power &mdash; whenever I need to upload a new sketch to the ESP8266.
 
+## Upgrading Onboard Flash Memory
+
+The following details are based on this guide for upgrading [ESP-03 Flash Memory To 128 Mbit][ESP-03 Upgrade Flash Memory To 128 Mbit].  Here are a couple options, noting that the [Adesto chip][Adesto AT25SF321 Datasheet] is a direct replacement for the chips installed on the [SparkFun Thing WRL-13231][SFE Thing] &mdash;
+
+* [Adesto AT25SF321][Adesto AT25SF321 Datasheet]: 32-Mbit, 2.5V Minimum SPI Serial Flash Memory with Dual-I/O and Quad-IO Support
+
+* [Winbond 25Q128FV][Winbond 25Q128FV Datasheet]: 128M-bit Serial Flash Memory with uniform 4KB sectors and Dual/Quad SPI and QPI
+
+I was able to locate the [Winbond 25Q128FV][AliExpress Winbond 25Q128FV] for sale on AliExpress, and thankfully offering world-wide delivery.
+
+You will need:
+
+1. [marcelstoer/docker-nodemcu-build](https://github.com/marcelstoer/docker-nodemcu-build) / [Docker Hub
+   Details](https://hub.docker.com/r/marcelstoer/nodemcu-build/)
+2. [moononournation/nodemcu-firmware](https://github.com/moononournation/nodemcu-firmware)
+
+Here are the steps:
+
+```
+$ git clone https://github.com/moononournation/nodemcu-firmware.git
+$ cd nodemcu-firmware
+
+# Modify `app/include/user_modules.h` to select modules you wish
+included in your build.
+# Ref: https://github.com/nodemcu/nodemcu-firmware/blob/master/app/include/user_modules.h
+
+# Use of the Docker Mount volume (-v) flag:
+# https://docs.docker.com/engine/reference/commandline/run/#/mount-volume-v-read-only
+#
+# This sets the current directory, where you cloned the `moononournation/nodemcu-firmware` repo above, at `/opt/nodemcu-firmware` within the container.
+$ docker run --rm -ti -e "FLOAT_ONLY=1" -v `pwd`:/opt/nodemcu-firmware marcelstoer/nodemcu-build
+
+# Put ESP8266 into Flash Mode:
+# http://nodemcu.readthedocs.io/en/master/en/flash/#putting-device-into-flash-mode
+#
+# Flash your ESP8266:
+# http://nodemcu.readthedocs.io/en/master/en/flash/#esptool
+#
+$ esptool.py --port <USB-port-with-ESP8266> write_flash 0x00000 <NodeMCU-firmware-directory>/bin/nodemcu_[integer|float]_<Git-branch>.bin
+```
+
 ----------
 [SFE Thing]: https://www.sparkfun.com/products/13231 "Thing WRL-13231"
 [SparkFun FTDI 3.3V]: https://www.sparkfun.com/products/9873 "FTDI 3.3V"
@@ -41,3 +82,8 @@ Having done so, I am able to tie GPIO0 to ground and cycle power &mdash; wheneve
 [ESP8266 Thing Hookup Guide Hardware Overview]: https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/hardware-overview "ESP8266 Thing Hookup Guide - Hardware Overview"
 
 [Serial Debugging]: https://learn.sparkfun.com/tutorials/esp8266-thing-hookup-guide/using-the-arduino-addon#serial-dtr "Using Serial Monitor"
+
+[AliExpress Winbond 25Q128FV]: http://www.aliexpress.com/item/25Q128FV/32675826288.html?spm=2114.13010208.99999999.267.TgW1G0 "AliExpress Winbond 25Q128FV"
+[Winbond 25Q128FV Datasheet]: http://www.winbond.com/hq/product/code-storage-flash-memory/serial-nor-flash/?__locale=en&partNo=W25Q128FV "Winbond 25Q128FV Datasheet"
+[Adesto AT25SF321 Datasheet]: http://www.adestotech.com/wp-content/uploads/DS-AT25SF321_047.pdf "Adesto AT25SF321 Datasheet"
+[ESP-03 Upgrade Flash Memory To 128 Mbit]: http://www.instructables.com/id/ESP-03-Upgrade-Flash-Memory-to-128-M-Bit/?ALLSTEPS "ESP-03 Upgrade Flash Memory To 128 Mbit"
