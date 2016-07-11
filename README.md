@@ -51,11 +51,11 @@ You will need:
 Here are the steps:
 
 ```
-$ git clone https://github.com/moononournation/nodemcu-firmware.git
+$ git clone https://github.com/bsodmike/nodemcu-firmware
+$ git checkout bsodmike-build
 $ cd nodemcu-firmware
 
-# Modify `app/include/user_modules.h` to select modules you wish
-included in your build.
+# Modify `app/include/user_modules.h` to select modules you wish included in your build.
 # Ref: https://github.com/nodemcu/nodemcu-firmware/blob/master/app/include/user_modules.h
 
 # Use of the Docker Mount volume (-v) flag:
@@ -72,6 +72,32 @@ $ docker run --rm -ti -e "FLOAT_ONLY=1" -v `pwd`:/opt/nodemcu-firmware marcelsto
 #
 $ esptool.py --port <USB-port-with-ESP8266> write_flash 0x00000 <NodeMCU-firmware-directory>/bin/nodemcu_[integer|float]_<Git-branch>.bin
 ```
+
+### Building NodeMCU with Vagrant
+
+Vagrant can be used to quickly build the NodeMCU binary. You will need
+to modify the `Vagrantfile` to ensure the synced folder `/iot/nodemcu-firmware_fork` within the Virtualbox VM points to your correct local-folder.
+
+```
+$ git clone https://github.com/bsodmike/nodemcu-firmware
+$ git checkout bsodmike-build
+$ cd nodemcu-firmware
+
+# Modify `app/include/user_modules.h` to select modules you wish included in your build.
+
+# Start Vagrant &mdash; this will take a while.
+$ vagrant up
+$ vagrant ssh
+
+# You will now be SSH'd into the Virtualbox VM
+vagrant@vagrant-ubuntu-vivid-64:~$ service docker start
+vagrant@vagrant-ubuntu-vivid-64:~$ cd /iot/nodemcu-firmware_fork
+
+vagrant@vagrant-ubuntu-vivid-64:~$ docker run --rm -ti -e "FLOAT_ONLY=1" -v `pwd`:/opt/nodemcu-firmware marcelstoer/nodemcu-build
+``
+
+You will find the compiled binary in `nodemcu-firmware/bin` which is
+ready to be flashed onto a new EEPROM chip.
 
 ----------
 [SFE Thing]: https://www.sparkfun.com/products/13231 "Thing WRL-13231"
