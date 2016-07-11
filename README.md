@@ -47,6 +47,8 @@ I was able to locate the [Winbond 25Q128FV][AliExpress Winbond 25Q128FV] for sal
 Vagrant can be used to quickly build the NodeMCU binary. You will need
 to modify the `Vagrantfile` to ensure the synced folder `/iot/nodemcu-firmware_fork` within the Virtualbox VM points to your correct local-folder.
 
+Note that [bsodmike/nodemcu-firmware](https://github.com/bsodmike/nodemcu-firmware) incorporates a [patch for the larger EEPROM size](https://github.com/bsodmike/nodemcu-firmware/commit/326c88bb4dd29271456725d62a393705e2cd27a7) in the `bsodmike-build` branch, which I plan to maintain against the `master` branch of [nodemcu/nodemcu-firmware](https://github.com/nodemcu/nodemcu-firmware).
+
 ```
 $ git clone https://github.com/bsodmike/nodemcu-firmware
 $ git checkout bsodmike-build
@@ -55,7 +57,7 @@ $ cd nodemcu-firmware
 # Modify `app/include/user_modules.h` to select modules you wish included in your build.
 # Ref: https://github.com/nodemcu/nodemcu-firmware/blob/master/app/include/user_modules.h
 
-# Start Vagrant &mdash; this will take a while.
+# Start Vagrant - this will take a while.
 $ vagrant up
 $ vagrant ssh
 
@@ -73,7 +75,7 @@ vagrant@vagrant-ubuntu-vivid-64:~$ docker run --rm -ti -e "FLOAT_ONLY=1" -v `pwd
 You will find the compiled binary in `nodemcu-firmware/bin` which is
 ready to be flashed onto a new EEPROM chip.
 
-### Flashing NodeMCU
+### Flashing NodeMCU onto the new EEPROM chip.
 
 ```
 # Put ESP8266 into Flash Mode:
