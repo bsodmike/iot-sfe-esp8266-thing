@@ -1,0 +1,6 @@
+[submodule "SparkFun\\ ESP8266\\ Thing\\ -\\ WRL-13231"]
+	path = SparkFun\\ ESP8266\\ Thing\\ -\\ WRL-13231
+	url = https://github.com/sparkfun/ESP8266_Thing
+[submodule "SparkFun ESP8266 Thing - WRL-13231/ESP8266_Thing"]
+	path = SparkFun ESP8266 Thing - WRL-13231/ESP8266_Thing
+	url = https://github.com/sparkfun/ESP8266_Thing
